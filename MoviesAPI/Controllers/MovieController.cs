@@ -11,6 +11,7 @@ public class MovieController : ControllerBase
     [HttpPost]
     public void AddMovie([FromBody] Movie movie)
     {
+        movie.Id = Guid.NewGuid();
         movieList.Add(movie);
         Console.WriteLine(movie.Title);
         Console.WriteLine(movie.Genre);
@@ -18,14 +19,14 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("/")]
-    public List<Movie> GetMovies ()
+    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 1, [FromQuery]int take = 4)
     {
-        return movieList;
+        return movieList.Skip(skip).Take(take);
     }
 
-    [HttpGet("/{$id}")]
-    public Movie GetMovieById(Movie movie)
+    [HttpGet("{id}")]
+    public Movie GetMovieById(Guid id)
     {
-        return movie;
+        return movieList.FirstOrDefault(movie => movie.Id == id);
     }
 }

@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace Models;
 public class Movie
 {
+    public Guid Id {get; set; }
+
     [Required]
     public string? Title { get; set; }
     
@@ -12,3 +14,4 @@ public class Movie
     [Required]
     public int? Duration { get; set; }
 }
+    
