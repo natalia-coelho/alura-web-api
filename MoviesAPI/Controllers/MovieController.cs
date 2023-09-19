@@ -8,25 +8,26 @@ namespace MoviesAPI.Controllers;
 public class MovieController : ControllerBase
 {
     private static List<Movie> movieList = new List<Movie>();
+
     [HttpPost]
-    public void AddMovie([FromBody] Movie movie)
+    public IActionResult AddMovie([FromBody] Movie movie)
     {
         movie.Id = Guid.NewGuid();
         movieList.Add(movie);
-        Console.WriteLine(movie.Title);
-        Console.WriteLine(movie.Genre);
-        Console.WriteLine(movie.Duration);
+        return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
     }
 
     [HttpGet("/")]
-    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 1, [FromQuery]int take = 4)
+    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 0, [FromQuery]int take = 2    )
     {
         return movieList.Skip(skip).Take(take);
     }
 
     [HttpGet("{id}")]
-    public Movie GetMovieById(Guid id)
+    public IActionResult GetMovieById(Guid id)
     {
-        return movieList.FirstOrDefault(movie => movie.Id == id);
+        var checkMovie =  movieList.FirstOrDefault(movie => movie.Id == id);
+        if (checkMovie == null) return NotFound();
+        return Ok(checkMovie);
     }
 }
