@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace MoviesAPI.Data
+namespace MoviesAPI.Data;
+
+public class MovieContext : DbContext
 {
-    public class MovieContext : DbContext
-    {
-        public MovieContext(DbContextOptions<MovieContext> options) : base(options)
-        {
+public class MovieContext : DbContext
+{
+    public MovieContext(DbContextOptions<MovieContext> options) : base(options){}
 
-        }
-
-        public DbSet<Movie>? Movies { get; set; }
-        
-    }
+    //Propriedade Movie:
+    public DbSet<Movie> Movies { get; set; }
+}
 }
