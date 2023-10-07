@@ -20,12 +20,15 @@ public class MovieController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult AddMovie([FromBody] CreateMovieDTO movieDto)
+    public IActionResult AddMovie(
+        [FromBody] CreateMovieDTO movieDto)
     {
         Movie movie = _mapper.Map<Movie>(movieDto);
         _movieContext.Movies.Add(movie);
         _movieContext.SaveChanges();
-        return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, movie);
+        return CreatedAtAction(nameof(GetMovieById),
+            new { id = movie.Id }, 
+            movie);
     }
 
     [HttpGet("/")]
