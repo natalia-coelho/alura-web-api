@@ -1,7 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models;
-public class Movie
+
+namespace MoviesAPI.Data.DTOs;
+
+public class CreateMovieDTO
 {
     [Key]
     [Required]
@@ -18,4 +24,3 @@ public class Movie
     [Range(70, 600, ErrorMessage = "The duration must have in 70 and 600 minutes")]
     public int? Duration { get; set; }
 }
-    

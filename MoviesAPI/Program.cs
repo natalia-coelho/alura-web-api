@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MovieConnection");
 builder.Services.AddDbContext<MovieContext>(options => options.UseSqlServer(connectionString));
 
+// Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Add services to the container.
 
 builder.Services.AddControllers();
