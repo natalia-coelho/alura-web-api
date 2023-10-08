@@ -20,7 +20,16 @@ public class MovieController : ControllerBase
         _mapper = mapper;
     }
 
+
+    /// <summary>
+    /// Add a movie in the database
+    /// </summary>
+    /// <param name="movieDto">Object's needed to a movie creation</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="201">In case of a successful insertion</response>
+
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult AddMovie(
         [FromBody] CreateMovieDTO movieDto)
     {
@@ -47,6 +56,7 @@ public class MovieController : ControllerBase
         return Ok(existingMovie);
     }
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult UpdateMovie(Guid id, [FromBody] UpdateMovieDTO movieDTO) 
     { 
         var existingMovie = _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
@@ -68,6 +78,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult UpdateMoviePatch(Guid id, JsonPatchDocument<UpdateMovieDTO> patch) 
     { 
         var existingMovie = _movieContext.Movies.FirstOrDefault(
@@ -89,6 +100,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult DeleteMovie(Guid id)
     { 
         var existingMovie = _movieContext.Movies.FirstOrDefault(

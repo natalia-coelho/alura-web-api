@@ -302,6 +302,46 @@ e.g:
 
 status: `204 (No Content)`
 
+### Swagger
+- Permite exibir os endpoints disponíveis na API
+- exemplo de documentação:
+```
+	/// <summary>
+
+    /// Add a movie in the database
+
+    /// </summary>
+
+    /// <param name="movieDto">Object's needed to a movie creation</param>
+
+    /// <returns>IActionResult</returns>
+
+    /// <response code="201">In case of a successful insertion</response>
+```
+	
+- é possível definir o tipo de retorno do endpoint. e.g:
+	`[ProducesResponseType(StatusCodes.Status204NoContent)]`
+- Configura as informações do swagger no Program.cs
+```c#
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MoviesAPI", Version = "v1" });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+```
+- No `csproj`
+	Adciona a tag `<GenerateDocumentationFile>true</GenerateDocumentationFile>` para gerar a documentação
+	e.g:
+```xml
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+```
 ---
 ### **Troubleshootings**
 
