@@ -1,22 +1,14 @@
-# dotnet-alura-api
-
-  
-
+# alura-web-api
 # Minhas Impressões do Curso
 
-  
+- O curso passou superficialmente por conceitos importantes, por isso é crucial aprofundar mais.
 
-O curso passou superficialmente por conceitos importantes, mas é crucial aprofundar mais.
+- O código utilizado é bem fraquinho para facilitar a didática, mas já existem conceitos mais atualizados e padrões mais elegantes para resolver os mesmos problemas.
 
-  
+- Fiz algumas alterações por conta própria para otimizar alguns conceitos
 
 Abaixo estão as anotações dos conceitos que achei bacana de registrar para consultar mais tarde.
-
-  
-
 ## API Definition
-
-  
 
 - **RESTFul API**
 
@@ -33,8 +25,6 @@ Abaixo estão as anotações dos conceitos que achei bacana de registrar para co
   
 
     ![Pasted image 20230905113348.png](Pasted%20image%2020230905113348.png)
-
-  
 
 ## Movies API
 
@@ -264,9 +254,10 @@ Status Code: `return NoContent();`
 
 **PATCH:**
 Verbo para atualizações parciais
-- Permite alterar apenas uma informação sem precisar passar o objeto inteiro 
+- Permite alterar apenas uma informação sem precisar passar o objeto inteiro;
+- Exige uma configuração mais complexa.
 
-	Tool: 
+	Used Tool: 
 	- **Microsoft.AspNetCore.Mvc.NewtonsoftJson**
 	  `dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson --version 6.0.10
 
@@ -290,6 +281,26 @@ Exemplo:
     }
 ]
 ```
+
+##### Delete
+- Utiliza o verbo `Delete`
+	`HttpDelete({"id"})`
+- método para remover: Remove();
+	`_movieContext.Remove(existingMovie)`
+e.g: 
+```c#
+    [HttpDelete("{id}")]
+    public IActionResult DeleteMovie(Guid id)
+    {
+        var existingMovie = _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
+        if (existingMovie == null) return NotFound();
+        _movieContext.Remove(existingMovie);
+        _movieContext.SaveChanges();
+        return NoContent();
+    }
+```
+
+status: `204 (No Content)`
 
 ---
 ### **Troubleshootings**
