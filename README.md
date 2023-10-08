@@ -302,7 +302,7 @@ e.g:
 
 status: `204 (No Content)`
 
-### Swagger
+### Configurando o Swagger
 - Permite exibir os endpoints disponíveis na API
 - exemplo de documentação:
 ```
@@ -321,7 +321,9 @@ status: `204 (No Content)`
 	
 - é possível definir o tipo de retorno do endpoint. e.g:
 	`[ProducesResponseType(StatusCodes.Status204NoContent)]`
-- Configura as informações do swagger no Program.cs
+- adiciona a injeção do Swagger no `Program.cs` (convenção do .NET 6):
+	`builder.Services.AddSwaggerGen()`
+e.g:
 ```c#
 builder.Services.AddSwaggerGen(c =>
 {
@@ -333,7 +335,7 @@ builder.Services.AddSwaggerGen(c =>
 ```
 - No `csproj`
 	Adciona a tag `<GenerateDocumentationFile>true</GenerateDocumentationFile>` para gerar a documentação
-	e.g:
+e.g:
 ```xml
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
