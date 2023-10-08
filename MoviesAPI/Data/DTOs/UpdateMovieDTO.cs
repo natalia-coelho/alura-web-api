@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
+
 namespace MoviesAPI.Data.DTOs;
 
-public class CreateMovieDTO
+public class UpdateMovieDTO
 {
     [Key]
     [Required]

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MoviesAPI.Data;
@@ -32,7 +33,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("/")]
-    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 0, [FromQuery]int take = 2)
+    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 0, [FromQuery]int take = 50)
     {
         return _movieContext.Movies.Skip(skip).Take(take);
     }
@@ -43,5 +44,46 @@ public class MovieController : ControllerBase
         var movie =  _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
         if (movie == null) return NotFound();
         return Ok(movie);
+    }
+    [HttpPut("{id}")]
+    public IActionResult UpdateMovie(Guid id, [FromBody] UpdateMovieDTO movieDTO) 
+    { 
+        var existingMovie = _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
+
+        if (existingMovie == null) 
+        {
+            return NotFound();
+        }
+
+        existingMovie.Title = movieDTO.Title;
+        existingMovie.Genre = movieDTO.Genre;
+        existingMovie.Duration = movieDTO.Duration;
+
+        _movieContext.SaveChanges();
+
+        _movieContext.SaveChanges();
+
+        return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    public IActionResult UpdateMoviePatch(Guid id, JsonPatchDocument<UpdateMovieDTO> patch) 
+    { 
+        var existingMovie = _movieContext.Movies.FirstOrDefault(
+            movie => movie.Id == id);
+        if (existingMovie == null) return NotFound();
+
+        var updatedMovie = _mapper.Map<UpdateMovieDTO>(existingMovie);
+
+        patch.ApplyTo(updatedMovie, ModelState);
+
+        if(!TryValidateModel(updatedMovie))
+        {
+            return ValidationProblem(ModelState);
+        }
+        _mapper.Map(updatedMovie, existingMovie);
+        _movieContext.SaveChanges();
+
+        return NoContent();
     }
 }
