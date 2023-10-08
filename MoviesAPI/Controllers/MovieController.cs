@@ -33,17 +33,18 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("/")]
-    public IEnumerable<Movie> RecoverMovies([FromQuery]int skip = 0, [FromQuery]int take = 50)
+    public IEnumerable<ReadMovieDTO> RecoverMovies([FromQuery]int skip = 0, [FromQuery]int take = 50)
     {
-        return _movieContext.Movies.Skip(skip).Take(take);
+        return _mapper.Map<List<ReadMovieDTO>>(_movieContext.Movies.Skip(skip).Take(take));
     }
 
     [HttpGet("{id}")]
     public IActionResult GetMovieById(Guid id)
     {
-        var movie =  _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
-        if (movie == null) return NotFound();
-        return Ok(movie);
+        var existingMovie =  _movieContext.Movies.FirstOrDefault(movie => movie.Id == id);
+        if (existingMovie == null) return NotFound();
+        var movieDTO = _mapper.Map<ReadMovieDTO>(existingMovie);
+        return Ok(existingMovie);
     }
     [HttpPut("{id}")]
     public IActionResult UpdateMovie(Guid id, [FromBody] UpdateMovieDTO movieDTO) 
@@ -84,6 +85,17 @@ public class MovieController : ControllerBase
         _mapper.Map(updatedMovie, existingMovie);
         _movieContext.SaveChanges();
 
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteMovie(Guid id)
+    { 
+        var existingMovie = _movieContext.Movies.FirstOrDefault(
+            movie => movie.Id == id);
+        if (existingMovie == null) return NotFound();
+        _movieContext.Remove(existingMovie);
+        _movieContext.SaveChanges();
         return NoContent();
     }
 }
