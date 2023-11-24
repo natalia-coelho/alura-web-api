@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAPI.Data.DTOs;
-
 public class CreateMovieDTO
 {
     [Key]

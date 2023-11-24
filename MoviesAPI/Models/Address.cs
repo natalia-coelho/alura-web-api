@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoviesAPI.Models;
-public class Cinema
+public class Address
 {
     [Key]
     [Required]
     public int Id { get; set; }
+    public string StreetName { get; set; }
+    public int Number { get; set; }
+    public virtual Cinema Cinema { get; set; }
 
-    [Required(ErrorMessage = $"Field's Name is mandatory.")]
-    public string Name { get; set; }
-    public int AddressId { get; set; }
-    public virtual Address Address{ get; set; }
+
 }

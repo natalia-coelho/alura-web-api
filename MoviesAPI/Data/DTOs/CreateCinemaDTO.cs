@@ -7,4 +7,5 @@ public class CreateCinemaDTO
 {
     [Required(ErrorMessage = $"Field 'Name' is mandatory.")]
     public string Name { get; set; }
+    public int AddressId { get; set; }
 }

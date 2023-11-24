@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoviesAPI.Data;
 
@@ -11,9 +12,11 @@ using MoviesAPI.Data;
 namespace MoviesAPI.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    partial class MovieContextModelSnapshot : ModelSnapshot
+    [Migration("20231124175241_Cinema e Endereco")]
+    partial class CinemaeEndereco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,10 @@ namespace MoviesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AdrressId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -81,8 +87,7 @@ namespace MoviesAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Cinemas");
                 });
@@ -90,17 +95,10 @@ namespace MoviesAPI.Migrations
             modelBuilder.Entity("MoviesAPI.Models.Cinema", b =>
                 {
                     b.HasOne("MoviesAPI.Models.Address", "Address")
-                        .WithOne("Cinema")
-                        .HasForeignKey("MoviesAPI.Models.Cinema", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("MoviesAPI.Models.Address", b =>
-                {
-                    b.Navigation("Cinema");
                 });
 #pragma warning restore 612, 618
         }
