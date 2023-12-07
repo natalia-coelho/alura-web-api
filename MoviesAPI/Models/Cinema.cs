@@ -10,7 +10,6 @@ public class Cinema
     [Key]
     [Required]
     public int Id { get; set; }
-
     [Required(ErrorMessage = $"Field's Name is mandatory.")]
     public string Name { get; set; }
     public int AddressId { get; set; }

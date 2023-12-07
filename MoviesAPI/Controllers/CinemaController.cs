@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Data;
 using MoviesAPI.Data.DTOs;
 using MoviesAPI.Models;
@@ -23,14 +24,18 @@ public class CinemaController : ControllerBase
     {
         Cinema cinema = _mapper.Map<Cinema>(cinemaDTO);
         _context.Cinemas.Add(cinema);
-
+        _context.SaveChanges();
         return CreatedAtAction(nameof(GetCinemaById), new { Id = cinema.Id }, cinemaDTO);
     }
 
     [HttpGet]
-    public IEnumerable<ReadCinemaDTO> GetCinema()
+    public IEnumerable<ReadCinemaDTO> GetCinema([FromQuery] int? enderecoId = null)
     {
-        return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList());
+            if(enderecoId == null)
+            {
+                return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.ToList());
+            }
+            return _mapper.Map<List<ReadCinemaDTO>>(_context.Cinemas.FromSqlRaw($"SELECT Id, Name, AddressId FROM cinemas where cinemas.addressId = {enderecoId}").ToList());
     }
 
     [HttpGet("{id}")]
@@ -57,7 +62,7 @@ public class CinemaController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("id")]
+    [HttpDelete("{id}")]
     public IActionResult DeleteCinema(int id)
     {
         Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
