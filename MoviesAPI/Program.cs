@@ -1,13 +1,25 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MoviesAPI.Data;
+using MoviesAPI.Models;
 using Newtonsoft;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("MovieConnection");
-builder.Services.AddDbContext<MovieContext>(options => options.UseSqlServer(connectionString));
+var userConnectionString = builder.Configuration.GetConnectionString("UserConnection");
+
+builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<UsuarioDbContext>(options => options.UseSqlServer(userConnectionString));
+
+// Add Identity
+builder.Services
+    .AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<UsuarioDbContext>() // database communication
+    .AddDefaultTokenProviders();                // authentication config
+
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

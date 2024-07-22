@@ -10,9 +10,9 @@ namespace MoviesAPI.Controllers
     [Route("[controller]")]
     public class AddressController : ControllerBase
     {
-        private MovieContext _context;
+        private MovieDbContext _context;
         private IMapper _mapper;
-        public AddressController(MovieContext context, IMapper mapper)
+        public AddressController(MovieDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

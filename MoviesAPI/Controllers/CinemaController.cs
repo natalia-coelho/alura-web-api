@@ -11,9 +11,9 @@ namespace MoviesAPI.Controllers;
 [Route("[controller]")]
 public class CinemaController : ControllerBase
 {
-    private MovieContext _context;
+    private MovieDbContext _context;
     private IMapper _mapper;
-    public CinemaController(MovieContext context, IMapper mapper)
+    public CinemaController(MovieDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

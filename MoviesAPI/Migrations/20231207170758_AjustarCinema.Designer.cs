@@ -11,7 +11,7 @@ using MoviesAPI.Data;
 
 namespace MoviesAPI.Migrations
 {
-    [DbContext(typeof(MovieContext))]
+    [DbContext(typeof(MovieDbContext))]
     [Migration("20231207170758_AjustarCinema")]
     partial class AjustarCinema
     {
