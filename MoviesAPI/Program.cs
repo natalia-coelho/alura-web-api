@@ -26,8 +26,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add services to the container.
 // foi preciso criar uma injecao de dependencia addscoped aqui no program.cs, o Imapper e o UserManager já vem com essa configuraçã por padrão, por isso n precisou 
-builder.Services.AddScoped<RegisterUserService>();
 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,9 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using MoviesAPI.Data.DTOs;
-using MoviesAPI.Models;
 using MoviesAPI.Services;
 
 namespace MoviesAPI.Controllers
@@ -12,32 +8,39 @@ namespace MoviesAPI.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private RegisterUserService _registerUserService;
+        private readonly UserService _userService;
 
-        public UserController(RegisterUserService registerUserService)
+        public UserController(UserService userService)
         {
-            _registerUserService = registerUserService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddUser(CreateUserDTO userDTO)
-        {    
-            await _registerUserService.RegisterUser(userDTO);
-            return Ok(userDTO);
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var user = _registerUserService.GetUsers();
+            var user = _userService.GetUsers();
             return Ok(user);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsers(string id)
         {
-            var user = _registerUserService.GetUserById(id);
+            var user = _userService.GetUserById(id);
             return Ok(user);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(LoginUserDTO userDto)
+        {
+            var token = await _userService.LoginAsync(userDto);
+            return Ok(token);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> AddUser(CreateUserDTO userDTO)
+        {
+            await _userService.RegisterUser(userDTO);
+            return Ok(userDTO);
         }
     }
 }
