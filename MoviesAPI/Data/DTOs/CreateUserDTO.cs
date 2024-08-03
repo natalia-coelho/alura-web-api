@@ -12,15 +12,15 @@ namespace MoviesAPI.Data.DTOs
         public string Email { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        public DateTime BirthDate { get; set; }
+
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
         
         [Required]
         [Compare("Password")]
         public string PasswordConfirmation { get; set; } = string.Empty;
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime DataNascimento { get; set; }
     }
 }

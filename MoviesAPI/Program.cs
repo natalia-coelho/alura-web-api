@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MoviesAPI.Data;
 using MoviesAPI.Models;
+using MoviesAPI.Services;
 using Newtonsoft;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,19 +13,21 @@ var connectionString = builder.Configuration.GetConnectionString("MovieConnectio
 var userConnectionString = builder.Configuration.GetConnectionString("UserConnection");
 
 builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<UsuarioDbContext>(options => options.UseSqlServer(userConnectionString));
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(userConnectionString));
 
 // Add Identity
 builder.Services
     .AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<UsuarioDbContext>() // database communication
+    .AddEntityFrameworkStores<UserDbContext>() // database communication
     .AddDefaultTokenProviders();                // authentication config
-
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add services to the container.
+// foi preciso criar uma injecao de dependencia addscoped aqui no program.cs, o Imapper e o UserManager já vem com essa configuraçã por padrão, por isso n precisou 
+builder.Services.AddScoped<RegisterUserService>();
+
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
