@@ -14,12 +14,12 @@ namespace MoviesAPI.Services
             Claim[] claims = new Claim[]
             {
                 new Claim("username", user.UserName),
-                new Claim("id", user.Id),
+                new Claim("id", user.Id.ToString()), // Ensure that Id is converted to string
                 new Claim("email", user.Email),
-                new Claim(ClaimTypes.DateOfBirth, user.BirthDate.ToString()),
+                new Claim(ClaimTypes.DateOfBirth, user.BirthDate.ToString("yyyy-MM-dd")) // Use a specific date format
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("gsfdgdgdsdfsdf5465"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o"));
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -27,7 +27,7 @@ namespace MoviesAPI.Services
                 (
                     expires: DateTime.Now.AddMinutes(10),
                     claims: claims,
-                    signingCredentials: null
+                    signingCredentials: signingCredentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

@@ -1,7 +1,12 @@
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MoviesAPI.Authorization;
 using MoviesAPI.Data;
 using MoviesAPI.Models;
 using MoviesAPI.Services;
@@ -25,9 +30,8 @@ builder.Services
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add services to the container.
-// foi preciso criar uma injecao de dependencia addscoped aqui no program.cs, o Imapper e o UserManager já vem com essa configuraçã por padrão, por isso n precisou 
-
-builder.Services.AddScoped<UserService>();
+builder.Services.AddSingleton<IAuthorizationHandler, IdadeAuthorization>();
+builder.Services.AddScoped<UserService>(); // foi preciso criar uma injecao de dependencia addscoped aqui no program.cs, o Imapper e o UserManager já vem com essa configuraçã por padrão, por isso n precisou 
 builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
@@ -39,6 +43,26 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o")),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero,
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IdadeMinima", policy => policy.AddRequirements(new IdadeMinima(18)));
 });
 
 
@@ -53,8 +77,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
