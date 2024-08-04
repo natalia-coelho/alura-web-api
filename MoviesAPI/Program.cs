@@ -15,7 +15,7 @@ using Newtonsoft;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("MovieConnection");
-var userConnectionString = builder.Configuration.GetConnectionString("UserConnection");
+var userConnectionString = builder.Configuration["ConnectionStrings:UserConnection"];
 
 builder.Services.AddDbContext<MovieDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(userConnectionString));
@@ -53,7 +53,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SymmetricSecurityKey"])),
         ValidateAudience = false,
         ValidateIssuer = false,
         ClockSkew = TimeSpan.Zero,

@@ -9,6 +9,13 @@ namespace MoviesAPI.Services
 {
     public class TokenService
     {
+        private IConfiguration _builderConfiguration;
+
+        public TokenService(IConfiguration builderConfiguration)
+        {
+            _builderConfiguration = builderConfiguration;
+        }
+
         public string GenerateToken(User user)
         {
             Claim[] claims = new Claim[]
@@ -19,13 +26,13 @@ namespace MoviesAPI.Services
                 new Claim(ClaimTypes.DateOfBirth, user.BirthDate.ToString("yyyy-MM-dd")) // Use a specific date format
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_builderConfiguration["SymmetricSecurityKey"]));
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken
                 (
-                    expires: DateTime.Now.AddMinutes(10),
+                    expires: DateTime.Now.AddMinutes(60),
                     claims: claims,
                     signingCredentials: signingCredentials
                 );
